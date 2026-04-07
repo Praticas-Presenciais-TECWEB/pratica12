@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GameDB — Veja e gerencie sua coleção de jogos." />
+  <title>GameDB — Listagem</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav aria-label="Navegação principal">
+      <a class="nav-logo" href="index.html" aria-label="GameDB — página inicial">GAMEDB</a>
+      <ul class="nav-list" role="list">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastro.html">Cadastro</a></li>
+        <li><a href="listagem.html" aria-current="page">Listagem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <section aria-labelledby="list-title">
+
+      <header class="list-header">
+        <h1 class="page-title" id="list-title" style="margin-bottom:0">
+          // Coleção
+          <span
+            class="count-badge"
+            id="count-badge"
+            aria-label="total de games"
+          >0</span>
+        </h1>
+
+        <search>
+          <label for="search">Buscar na coleção</label>
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="search"
+            placeholder="Título, gênero, plataforma..."
+            aria-controls="game-grid"
+          />
+        </search>
+      </header>
+
+      <ul
+        class="game-grid"
+        id="game-grid"
+        role="list"
+        aria-label="Lista de games cadastrados"
+        aria-live="polite"
+      ></ul>
+
+      <aside id="empty-state" class="empty-state" hidden>
+        <span class="empty-state__icon" aria-hidden="true">🎮</span>
+        <p>Nenhum game encontrado.<br />Que tal cadastrar um?</p>
+        <a href="cadastro.html" class="btn btn--primary">＋ Adicionar game</a>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>GameDB &copy; 2025</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    function renderGames(games) {
+      const grid  = document.getElementById('game-grid');
+      const empty = document.getElementById('empty-state');
+      const badge = document.getElementById('count-badge');
+
+      badge.textContent = games.length;
+      badge.setAttribute('aria-label',
+        `${games.length} game${games.length !== 1 ? 's' : ''} encontrado${games.length !== 1 ? 's' : ''}`
+      );
+
+      if (games.length === 0) {
+        grid.innerHTML = '';
+        empty.removeAttribute('hidden');
+        return;
+      }
+      empty.setAttribute('hidden', '');
+
+      grid.innerHTML = games.map((game, index) => `
+        <li class="game-card" style="animation-delay:${index * 0.05}s">
+          <article aria-labelledby="game-title-${game.id}">
+
+            <header class="game-card__header">
+              <h2 class="game-card__title" id="game-title-${game.id}">
+                ${escapeHtml(game.title)}
+              </h2>
+              <span class="game-card__genre" aria-label="Gênero: ${escapeHtml(game.genre)}">
+                ${escapeHtml(game.genre)}
+              </span>
+            </header>
+
+            <dl class="game-card__meta">
+              <dt class="visually-hidden">Plataforma</dt>
+              <dd class="meta-item">🕹 <strong>${escapeHtml(game.platform)}</strong></dd>
+
+              <dt class="visually-hidden">Ano</dt>
+              <dd class="meta-item">📅 <strong>${escapeHtml(game.year)}</strong></dd>
+
+              ${game.developer ? `
+              <dt class="visually-hidden">Desenvolvedora</dt>
+              <dd class="meta-item">🏢 <strong>${escapeHtml(game.developer)}</strong></dd>
+              ` : ''}
+            </dl>
+
+            ${game.description ? `
+            <p class="game-card__desc">${escapeHtml(game.description)}</p>
+            ` : ''}
+
+            <footer class="game-card__footer">
+              <p class="game-rating" aria-label="Nota: ${game.rating} de 10">
+                <span class="game-rating__score">
+                  ${parseFloat(game.rating).toFixed(1)}
+                  <small>/10</small>
+                </span>
+                <span class="game-rating__stars" aria-hidden="true">
+                  ${starsFromRating(game.rating)}
+                </span>
+              </p>
+              <button
+                class="btn btn--danger"
+                aria-label="Remover ${escapeHtml(game.title)}"
+                onclick="handleDelete(${game.id})"
+              >
+                🗑 Remover
+              </button>
+            </footer>
+
+          </article>
+        </li>
+      `).join('');
+    }
+
+    function handleDelete(id) {
+      const game = getGames().find(g => g.id === id);
+      if (!game) return;
+      if (!confirm(`Remover "${game.title}" da coleção?`)) return;
+      deleteGame(id);
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const query = document.getElementById('search').value.toLowerCase().trim();
+      const all   = getGames();
+      const filtered = query
+        ? all.filter(g =>
+            g.title.toLowerCase().includes(query)    ||
+            g.genre.toLowerCase().includes(query)    ||
+            g.platform.toLowerCase().includes(query) ||
+            (g.developer && g.developer.toLowerCase().includes(query))
+          )
+        : all;
+      renderGames(filtered);
+    }
+
+    document.getElementById('search').addEventListener('input', applyFilter);
+    document.addEventListener('DOMContentLoaded', applyFilter);
+  </script>
+
+</body>
+</html>
