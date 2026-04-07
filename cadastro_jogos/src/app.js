@@ -40,7 +40,6 @@ function deleteGame(id) {
   saveGames(games);
 }
 
-// ── UTILITÁRIOS ─────────────────────────────────────────────────
 /**
  * Converte nota (0–10) em string de estrelas (0–5).
  * @param {number|string} rating
