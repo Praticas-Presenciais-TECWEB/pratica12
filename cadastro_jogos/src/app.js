@@ -8,6 +8,7 @@
 const STORAGE_KEY = 'gamedb_games';
 
 // ── LEITURA / ESCRITA ───────────────────────────────────────────
+
 /**
  * Retorna o array de games armazenado.
  * @returns {Array} lista de games
@@ -26,6 +27,7 @@ function saveGames(games) {
 }
 
 // ── OPERAÇÕES CRUD ──────────────────────────────────────────────
+
 /**
  * Adiciona um novo game à lista.
  * @param {Object} game - dados do game (sem id/createdAt)
@@ -50,6 +52,7 @@ function deleteGame(id) {
 }
 
 // ── UTILITÁRIOS ─────────────────────────────────────────────────
+
 /**
  * Converte nota (0–10) em string de estrelas (0–5).
  * @param {number|string} rating
@@ -74,6 +77,7 @@ function escapeHtml(str) {
 }
 
 // ── NAVEGAÇÃO ATIVA ─────────────────────────────────────────────
+
 /**
  * Marca o link da página atual com aria-current="page".
  * Chamado automaticamente ao carregar qualquer página.
@@ -81,8 +85,7 @@ function escapeHtml(str) {
 function setActiveNav() {
   const page = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-list a').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === page) {
+    if (link.getAttribute('href') === page) {
       link.setAttribute('aria-current', 'page');
     } else {
       link.removeAttribute('aria-current');

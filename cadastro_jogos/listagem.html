@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="GameDB — Veja e gerencie sua coleção de jogos." />
   <title>GameDB — Listagem</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="src/style.css" />
 </head>
 <body>
 
@@ -70,13 +70,15 @@
 
   <script src="app.js"></script>
   <script>
+    // ── RENDERIZAÇÃO ────────────────────────────────────────────
     function renderGames(games) {
       const grid  = document.getElementById('game-grid');
       const empty = document.getElementById('empty-state');
       const badge = document.getElementById('count-badge');
 
       badge.textContent = games.length;
-      badge.setAttribute('aria-label',
+      badge.setAttribute(
+        'aria-label',
         `${games.length} game${games.length !== 1 ? 's' : ''} encontrado${games.length !== 1 ? 's' : ''}`
       );
 
@@ -85,8 +87,10 @@
         empty.removeAttribute('hidden');
         return;
       }
+
       empty.setAttribute('hidden', '');
 
+      // Renderização múltipla: um <li><article> por game
       grid.innerHTML = games.map((game, index) => `
         <li class="game-card" style="animation-delay:${index * 0.05}s">
           <article aria-labelledby="game-title-${game.id}">
@@ -141,6 +145,7 @@
       `).join('');
     }
 
+    // ── EXCLUSÃO ─────────────────────────────────────────────────
     function handleDelete(id) {
       const game = getGames().find(g => g.id === id);
       if (!game) return;
@@ -149,6 +154,7 @@
       applyFilter();
     }
 
+    // ── BUSCA ────────────────────────────────────────────────────
     function applyFilter() {
       const query = document.getElementById('search').value.toLowerCase().trim();
       const all   = getGames();
@@ -163,6 +169,7 @@
       renderGames(filtered);
     }
 
+    // ── EVENTOS ───────────────────────────────────────────────────
     document.getElementById('search').addEventListener('input', applyFilter);
     document.addEventListener('DOMContentLoaded', applyFilter);
   </script>
