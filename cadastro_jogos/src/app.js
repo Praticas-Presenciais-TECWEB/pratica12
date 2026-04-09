@@ -7,7 +7,7 @@
 
 const STORAGE_KEY = 'gamedb_games';
 
-// ── LEITURA / ESCRITA ───────────────────────────────────────────
+
 
 /**
  * Retorna o array de games armazenado.
@@ -26,7 +26,7 @@ function saveGames(games) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
-// ── OPERAÇÕES CRUD ──────────────────────────────────────────────
+
 
 /**
  * Adiciona um novo game à lista.
@@ -51,7 +51,7 @@ function deleteGame(id) {
   saveGames(games);
 }
 
-// ── UTILITÁRIOS ─────────────────────────────────────────────────
+
 
 /**
  * Converte nota (0–10) em string de estrelas (0–5).
@@ -76,7 +76,7 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// ── NAVEGAÇÃO ATIVA ─────────────────────────────────────────────
+
 
 /**
  * Marca o link da página atual com aria-current="page".
