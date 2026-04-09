@@ -1,5 +1,13 @@
+/**
+ * app.js — Estado global da aplicação GameDB
+ *
+ * Os dados ficam em um array em memória.
+ * localStorage é usado para persistir entre as páginas HTML.
+ */
+
 const STORAGE_KEY = 'gamedb_games';
 
+// ── LEITURA / ESCRITA ───────────────────────────────────────────
 /**
  * Retorna o array de games armazenado.
  * @returns {Array} lista de games
@@ -17,6 +25,7 @@ function saveGames(games) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
+// ── OPERAÇÕES CRUD ──────────────────────────────────────────────
 /**
  * Adiciona um novo game à lista.
  * @param {Object} game - dados do game (sem id/createdAt)
@@ -40,6 +49,7 @@ function deleteGame(id) {
   saveGames(games);
 }
 
+// ── UTILITÁRIOS ─────────────────────────────────────────────────
 /**
  * Converte nota (0–10) em string de estrelas (0–5).
  * @param {number|string} rating
