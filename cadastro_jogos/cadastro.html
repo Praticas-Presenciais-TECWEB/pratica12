@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GameDB — Cadastre um novo jogo na sua coleção." />
+  <title>GameDB — Cadastro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <header class="site-header">
+    <nav aria-label="Navegação principal">
+      <a class="nav-logo" href="index.html" aria-label="GameDB — página inicial">GAMEDB</a>
+      <ul class="nav-list" role="list">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastro.html" aria-current="page">Cadastro</a></li>
+        <li><a href="listagem.html">Listagem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <h1 class="page-title">// Cadastrar Game</h1>
+
+    <p class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+      ✔ Game cadastrado com sucesso!
+    </p>
+
+    <section aria-labelledby="form-title">
+      <h2 id="form-title" class="visually-hidden">Formulário de cadastro de game</h2>
+
+      <form id="form-game" class="form-card" novalidate>
+
+        <fieldset class="form-grid">
+          <legend class="visually-hidden">Informações do game</legend>
+
+          <p class="form-group">
+            <label for="title">Título <abbr title="obrigatório">*</abbr></label>
+            <input type="text" id="title" name="title" placeholder="Ex: The Last of Us" autocomplete="off"
+              aria-required="true" aria-describedby="err-title" />
+            <span class="field-error" id="err-title" role="alert">
+              Informe o título do game.
+            </span>
+          </p>
+
+          <p class="form-group">
+            <label for="genre">Gênero <abbr title="obrigatório">*</abbr></label>
+            <select id="genre" name="genre" aria-required="true" aria-describedby="err-genre">
+              <option value="">Selecione...</option>
+              <option>Ação</option>
+              <option>Aventura</option>
+              <option>RPG</option>
+              <option>FPS</option>
+              <option>Estratégia</option>
+              <option>Esporte</option>
+              <option>Corrida</option>
+              <option>Luta</option>
+              <option>Terror</option>
+              <option>Simulação</option>
+              <option>Puzzle</option>
+              <option>Outro</option>
+            </select>
+            <span class="field-error" id="err-genre" role="alert">
+              Selecione um gênero.
+            </span>
+          </p>
+
+          <p class="form-group">
+            <label for="platform">Plataforma <abbr title="obrigatório">*</abbr></label>
+            <select id="platform" name="platform" aria-required="true" aria-describedby="err-platform">
+              <option value="">Selecione...</option>
+              <option>PC</option>
+              <option>PlayStation 5</option>
+              <option>PlayStation 4</option>
+              <option>Xbox Series X/S</option>
+              <option>Xbox One</option>
+              <option>Nintendo Switch</option>
+              <option>Mobile</option>
+              <option>Outro</option>
+            </select>
+            <span class="field-error" id="err-platform" role="alert">
+              Selecione uma plataforma.
+            </span>
+          </p>
+
+          <p class="form-group">
+            <label for="year">Ano de lançamento <abbr title="obrigatório">*</abbr></label>
+            <input type="number" id="year" name="year" placeholder="Ex: 2024" min="1970" max="2099" aria-required="true"
+              aria-describedby="err-year" />
+            <span class="field-error" id="err-year" role="alert">
+              Informe um ano válido (1970–2099).
+            </span>
+          </p>
+
+          <p class="form-group">
+            <label for="rating">Nota (0–10) <abbr title="obrigatório">*</abbr></label>
+            <input type="number" id="rating" name="rating" placeholder="Ex: 8.5" min="0" max="10" step="0.1"
+              aria-required="true" aria-describedby="err-rating" />
+            <span class="field-error" id="err-rating" role="alert">
+              Informe uma nota entre 0 e 10.
+            </span>
+          </p>
+
+          <p class="form-group">
+            <label for="developer">Desenvolvedora</label>
+            <input type="text" id="developer" name="developer" placeholder="Ex: Naughty Dog" autocomplete="off" />
+          </p>
+
+          <p class="form-group form-group--full">
+            <label for="description">Descrição / Comentário</label>
+            <textarea id="description" name="description" placeholder="O que você achou do jogo?"></textarea>
+          </p>
+
+        </fieldset>
+
+        <p class="form-actions">
+          <button type="submit" class="btn btn--primary">＋ Cadastrar game</button>
+          <button type="reset" class="btn btn--outline">Limpar</button>
+        </p>
+
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>GameDB &copy; 2025</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const REQUIRED_FIELDS = ['title', 'genre', 'platform', 'year', 'rating'];
+
+    function setFieldValidity(id, isInvalid) {
+      const input = document.getElementById(id);
+      const error = document.getElementById('err-' + id);
+      if (!input || !error) return;
+      input.setAttribute('aria-invalid', isInvalid ? 'true' : 'false');
+      error.classList.toggle('field-error--visible', isInvalid);
+    }
+
+    function validateField(id) {
+      let invalid = false;
+      if (id === 'title') {
+        invalid = !document.getElementById('title').value.trim();
+      } else if (id === 'genre') {
+        invalid = !document.getElementById('genre').value;
+      } else if (id === 'platform') {
+        invalid = !document.getElementById('platform').value;
+      } else if (id === 'year') {
+        const v = parseInt(document.getElementById('year').value);
+        invalid = isNaN(v) || v < 1970 || v > 2099;
+      } else if (id === 'rating') {
+        const v = parseFloat(document.getElementById('rating').value);
+        invalid = isNaN(v) || v < 0 || v > 10;
+      }
+      setFieldValidity(id, invalid);
+      return !invalid;
+    }
+
+    function validateForm() {
+      return REQUIRED_FIELDS.map(validateField).every(Boolean);
+    }
+
+    REQUIRED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => setFieldValidity(id, false));
+      el.addEventListener('change', () => setFieldValidity(id, false));
+    });
+
+    document.getElementById('form-game').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validateForm()) return;
+
+      const game = {
+        title: document.getElementById('title').value.trim(),
+        genre: document.getElementById('genre').value,
+        platform: document.getElementById('platform').value,
+        year: document.getElementById('year').value,
+        rating: document.getElementById('rating').value,
+        developer: document.getElementById('developer').value.trim(),
+        description: document.getElementById('description').value.trim(),
+      };
+
+      addGame(game);
+
+      const toast = document.getElementById('toast');
+      toast.classList.add('toast--visible');
+      setTimeout(() => toast.classList.remove('toast--visible'), 3000);
+
+      document.getElementById('form-game').reset();
+    });
+  </script>
+
+</body>
+
+</html>
