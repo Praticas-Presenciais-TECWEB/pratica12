@@ -64,17 +64,18 @@
 
     document.getElementById('stat-total').textContent = games.length;
 
-    const generos = new Set(games.map(g => g.genero));
+    const generos = new Set(games.map(g => g.genre));
     document.getElementById('stat-generos').textContent = generos.size;
 
     if (games.length > 0) {
-      const media = games.reduce((s, g) => s + parseFloat(g.nota), 0) / games.length;
+      const media = games.reduce((s, g) => s + parseFloat(g.rating), 0) / games.length;
       document.getElementById('stat-media').textContent = media.toFixed(1);
 
-      const ultimo = games[games.length - 1].titulo;
+      const ultimo = games[games.length - 1].title;
       document.getElementById('stat-ultimo').textContent =
         ultimo.length > 12 ? ultimo.slice(0, 12) + '…' : ultimo;
     }
+    
   </script>
 
 </body>
