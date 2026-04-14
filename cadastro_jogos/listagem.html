@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameDB — Listagem</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="index.html">Game dos Amigos</a>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastro.html">Cadastro</a></li>
+        <li><a href="listagem.html">Listagem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+
+      <h1>Coleção <span id="count-badge">0</span></h1>
+
+      <p>
+        <label for="search">Buscar na coleção</label>
+        <input type="search" id="search" placeholder="Título, gênero, plataforma..." />
+      </p>
+
+      <ul id="game-grid"></ul>
+
+      <aside id="empty-state" hidden>
+        <p>Nenhum game encontrado. Que tal cadastrar um?</p>
+        <a href="cadastro.html">+ Adicionar game</a>
+      </aside>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>Game dos Amigos &copy; 2026</p>
+  </footer>
+
+  <script src="src/app.js"></script>
+  <script>
+    function renderGames(games) {
+      const grid  = document.getElementById('game-grid');
+      const empty = document.getElementById('empty-state');
+      const badge = document.getElementById('count-badge');
+
+      badge.textContent = games.length;
+
+      if (games.length === 0) {
+        grid.innerHTML = '';
+        empty.removeAttribute('hidden');
+        return;
+      }
+
+      empty.setAttribute('hidden', '');
+
+      grid.innerHTML = games.map(game => `
+        <li>
+          <article>
+            <h2>${escapeHtml(game.title)}</h2>
+            <p>Gênero: <strong>${escapeHtml(game.genre)}</strong></p>
+            <p>Plataforma: <strong>${escapeHtml(game.platform)}</strong></p>
+            <p>Ano: <strong>${escapeHtml(game.year)}</strong></p>
+            ${game.developer ? `<p>Desenvolvedora: <strong>${escapeHtml(game.developer)}</strong></p>` : ''}
+            ${game.description ? `<p>${escapeHtml(game.description)}</p>` : ''}
+            <p>Nota: <strong>${parseFloat(game.rating).toFixed(1)}/10</strong> ${starsFromRating(game.rating)}</p>
+            <button onclick="handleDelete(${game.id})">Remover</button>
+          </article>
+        </li>
+      `).join('');
+    }
+
+    function handleDelete(id) {
+      const game = getGames().find(g => g.id === id);
+      if (!game) return;
+      if (!confirm(`Remover "${game.title}" da coleção?`)) return;
+      deleteGame(id);
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const query = document.getElementById('search').value.toLowerCase().trim();
+      const all = getGames();
+      const filtered = query
+        ? all.filter(g =>
+            g.title.toLowerCase().includes(query)    ||
+            g.genre.toLowerCase().includes(query)    ||
+            g.platform.toLowerCase().includes(query) ||
+            (g.developer && g.developer.toLowerCase().includes(query))
+          )
+        : all;
+      renderGames(filtered);
+    }
+
+    document.getElementById('search').addEventListener('input', applyFilter);
+    document.addEventListener('DOMContentLoaded', applyFilter);
+  </script>
+
+</body>
+</html>

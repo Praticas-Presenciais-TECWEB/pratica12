@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameDB — Cadastro</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <a href="index.html">Game dos Amigos</a>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastro.html">Cadastro</a></li>
+        <li><a href="listagem.html">Listagem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <h1>Cadastrar Game</h1>
+
+    <p id="toast">✔ Game cadastrado com sucesso!</p>
+
+    <section>
+      <form id="form-game" novalidate>
+        <fieldset>
+          <legend>Informações do game</legend>
+
+          <p>
+            <label for="title">Título *</label>
+            <input type="text" id="title" name="title" placeholder="Ex: The Last of Us" autocomplete="off" />
+            <span id="err-title">Informe o título do game.</span>
+          </p>
+
+          <p>
+            <label for="genre">Gênero *</label>
+            <select id="genre" name="genre">
+              <option value="">Selecione...</option>
+              <option>Ação</option>
+              <option>Aventura</option>
+              <option>RPG</option>
+              <option>FPS</option>
+              <option>Estratégia</option>
+              <option>Esporte</option>
+              <option>Corrida</option>
+              <option>Luta</option>
+              <option>Terror</option>
+              <option>Simulação</option>
+              <option>Puzzle</option>
+              <option>Outro</option>
+            </select>
+            <span id="err-genre">Selecione um gênero.</span>
+          </p>
+
+          <p>
+            <label for="platform">Plataforma *</label>
+            <select id="platform" name="platform">
+              <option value="">Selecione...</option>
+              <option>PC</option>
+              <option>PlayStation 5</option>
+              <option>PlayStation 4</option>
+              <option>Xbox Series X/S</option>
+              <option>Xbox One</option>
+              <option>Nintendo Switch</option>
+              <option>Mobile</option>
+              <option>Outro</option>
+            </select>
+            <span id="err-platform">Selecione uma plataforma.</span>
+          </p>
+
+          <p>
+            <label for="year">Ano de lançamento *</label>
+            <input type="number" id="year" name="year" placeholder="Ex: 2024" min="1970" max="2099" />
+            <span id="err-year">Informe um ano válido (1970–2099).</span>
+          </p>
+
+          <p>
+            <label for="rating">Nota (0–10) *</label>
+            <input type="number" id="rating" name="rating" placeholder="Ex: 8.5" min="0" max="10" step="0.1" />
+            <span id="err-rating">Informe uma nota entre 0 e 10.</span>
+          </p>
+
+          <p>
+            <label for="developer">Desenvolvedora</label>
+            <input type="text" id="developer" name="developer" placeholder="Ex: Naughty Dog" autocomplete="off" />
+          </p>
+
+          <p>
+            <label for="description">Descrição / Comentário</label>
+            <textarea id="description" name="description" placeholder="O que você achou do jogo?"></textarea>
+          </p>
+
+        </fieldset>
+
+        <p>
+          <button type="submit">+ Cadastrar game</button>
+          <button type="reset">Limpar</button>
+        </p>
+
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Game dos Amigos &copy; 2026</p>
+  </footer>
+
+  <script src="src/app.js"></script>
+  <script>
+    const REQUIRED_FIELDS = ['title', 'genre', 'platform', 'year', 'rating'];
+
+    function setFieldValidity(id, isInvalid) {
+      const input = document.getElementById(id);
+      const error = document.getElementById('err-' + id);
+      if (!input || !error) return;
+      error.style.display = isInvalid ? 'block' : 'none';
+    }
+
+    function validateField(id) {
+      let invalid = false;
+      if (id === 'title') {
+        invalid = !document.getElementById('title').value.trim();
+      } else if (id === 'genre') {
+        invalid = !document.getElementById('genre').value;
+      } else if (id === 'platform') {
+        invalid = !document.getElementById('platform').value;
+      } else if (id === 'year') {
+        const v = parseInt(document.getElementById('year').value);
+        invalid = isNaN(v) || v < 1970 || v > 2099;
+      } else if (id === 'rating') {
+        const v = parseFloat(document.getElementById('rating').value);
+        invalid = isNaN(v) || v < 0 || v > 10;
+      }
+      setFieldValidity(id, invalid);
+      return !invalid;
+    }
+
+    function validateForm() {
+      return REQUIRED_FIELDS.map(validateField).every(Boolean);
+    }
+
+    REQUIRED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => setFieldValidity(id, false));
+      el.addEventListener('change', () => setFieldValidity(id, false));
+    });
+
+    document.getElementById('form-game').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!validateForm()) return;
+
+      const game = {
+        title: document.getElementById('title').value.trim(),
+        genre: document.getElementById('genre').value,
+        platform: document.getElementById('platform').value,
+        year: document.getElementById('year').value,
+        rating: document.getElementById('rating').value,
+        developer: document.getElementById('developer').value.trim(),
+        description: document.getElementById('description').value.trim(),
+      };
+
+      addGame(game);
+
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 3000);
+
+      document.getElementById('form-game').reset();
+    });
+  </script>
+
+</body>
+
+</html>
