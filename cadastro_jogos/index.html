@@ -1,13 +1,81 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cadastro_jogos</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tela Inicial</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="index.html">Game dos Amigos</a>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastro.html">Cadastro</a></li>
+        <li><a href="listagem.html">Listagem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section>
+      <h1>Organize seus games favoritos</h1>
+      <p>Cadastre, avalie e gerencie sua coleção de jogos em um só lugar.</p>
+      <p>
+        <a href="cadastro.html">+ Adicionar game</a>
+        <a href="listagem.html">Ver coleção</a>
+      </p>
+    </section>
+
+    <section>
+      <h2>Sua coleção</h2>
+      <ul>
+        <li>
+          <strong id="stat-total">0</strong>
+          <span>Games cadastrados</span>
+        </li>
+        <li>
+          <strong id="stat-generos">0</strong>
+          <span>Gêneros diferentes</span>
+        </li>
+        <li>
+          <strong id="stat-media">—</strong>
+          <span>Nota média</span>
+        </li>
+        <li>
+          <strong id="stat-ultimo">—</strong>
+          <span>Último cadastrado</span>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Game dos Amigos &copy; 2026</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const games = getGames();
+
+    document.getElementById('stat-total').textContent = games.length;
+
+    const generos = new Set(games.map(g => g.genero));
+    document.getElementById('stat-generos').textContent = generos.size;
+
+    if (games.length > 0) {
+      const media = games.reduce((s, g) => s + parseFloat(g.nota), 0) / games.length;
+      document.getElementById('stat-media').textContent = media.toFixed(1);
+
+      const ultimo = games[games.length - 1].titulo;
+      document.getElementById('stat-ultimo').textContent =
+        ultimo.length > 12 ? ultimo.slice(0, 12) + '…' : ultimo;
+    }
+  </script>
+
+</body>
 </html>
