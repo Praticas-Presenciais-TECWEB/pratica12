@@ -58,8 +58,9 @@
     <p>Game dos Amigos &copy; 2026</p>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="src/app.js"></script>
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
     const games = getGames();
 
     document.getElementById('stat-total').textContent = games.length;
@@ -73,8 +74,9 @@
 
       const ultimo = games[games.length - 1].title;
       document.getElementById('stat-ultimo').textContent =
-        ultimo.length > 12 ? ultimo.slice(0, 12) + '…' : ultimo;
-    }
+      ultimo.length > 12 ? ultimo.slice(0, 12) + '…' : ultimo;
+  }
+});
     
   </script>
 
